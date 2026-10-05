@@ -1,0 +1,426 @@
+<!doctype html>
+<!--
+  Radio overlay for TikTok LIVE Studio. Built 05-10-2026.
+
+  In TikTok LIVE Studio, add a Link source, paste this file's address, and
+  size it to the whole canvas. The background is transparent, so your camera
+  or visual shows through. Designed for a portrait (9:16) LIVE.
+
+  To change the wording, edit the SETTINGS block near the bottom of this file.
+-->
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Radio overlay</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --accent: #ff4d3d;
+    --panel: rgba(10, 12, 20, 0.76);
+    --panel-edge: rgba(255, 255, 255, 0.12);
+    --text: #ffffff;
+    --muted: rgba(255, 255, 255, 0.70);
+    --faint: rgba(255, 255, 255, 0.50);
+    --display: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
+    --body: "Barlow", "Segoe UI", system-ui, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: transparent;
+  }
+
+  body {
+    font-family: var(--body);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  [hidden] { display: none !important; }
+
+  #stage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1080px;
+    height: 1920px;
+    transform-origin: 0 0;
+  }
+
+  .panel {
+    background: var(--panel);
+    border: 2px solid var(--panel-edge);
+    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.35);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+  }
+
+  #top {
+    position: absolute;
+    top: 228px;
+    left: 48px;
+    right: 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  /* Station bar */
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: 26px;
+    height: 136px;
+    padding: 0 26px 0 28px;
+    border-radius: 30px;
+  }
+
+  .onair {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex: none;
+    padding: 14px 24px 14px 20px;
+    border-radius: 999px;
+    background: var(--accent);
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 34px;
+    line-height: 1;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .onair .dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    animation: pulse 1.6s ease-out infinite;
+  }
+
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.75); }
+    70% { box-shadow: 0 0 0 16px rgba(255, 255, 255, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+  }
+
+  .brand { flex: 1; min-width: 0; }
+
+  .name {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 62px;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .tag {
+    margin-top: 6px;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .logo {
+    flex: none;
+    width: 96px;
+    height: 96px;
+    border-radius: 22px;
+    background: linear-gradient(140deg, var(--accent), #1b1e2b 120%);
+    display: grid;
+    place-items: center;
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 54px;
+  }
+
+  /* World clocks */
+  .clocks {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .clock {
+    padding: 14px 20px 12px;
+    border-radius: 22px;
+  }
+
+  .city {
+    display: block;
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 23px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--faint);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .time {
+    display: block;
+    margin-top: 2px;
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 42px;
+    line-height: 1.05;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  /* Ticker */
+  .ticker {
+    display: flex;
+    align-items: center;
+    height: 76px;
+    padding-left: 12px;
+    border-radius: 22px;
+    overflow: hidden;
+  }
+
+  .ticker-label {
+    flex: none;
+    padding: 10px 18px;
+    border-radius: 14px;
+    background: var(--accent);
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 28px;
+    line-height: 1;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .ticker-track {
+    flex: 1;
+    min-width: 0;
+    margin-left: 10px;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 40px, #000 calc(100% - 40px), transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 40px, #000 calc(100% - 40px), transparent);
+  }
+
+  .ticker-move {
+    display: flex;
+    width: max-content;
+    animation: scroll 40s linear infinite;
+  }
+
+  .run { display: flex; align-items: center; }
+
+  .msg {
+    display: flex;
+    align-items: center;
+    font-size: 32px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .msg::after {
+    content: "";
+    width: 12px;
+    height: 12px;
+    margin: 0 34px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  @keyframes scroll {
+    to { transform: translateX(-50%); }
+  }
+
+  /* Still image version (?image=1): no clocks, no movement */
+  body.image .onair .dot { animation: none; }
+  body.image .ticker-move { animation: none; }
+  body.image .ticker-track { -webkit-mask-image: none; mask-image: none; }
+  body.image .msg::after { display: none; }
+
+  /* Layout check only (add ?preview=1 to the address). Never used on air. */
+  body.preview {
+    background:
+      radial-gradient(ellipse at 50% 58%, #5b4636 0%, #2b2230 38%, #0d0e14 75%),
+      #0d0e14;
+  }
+
+  .guide {
+    position: absolute;
+    border: 3px dashed rgba(255, 255, 255, 0.35);
+    border-radius: 18px;
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 26px;
+    font-weight: 600;
+    padding: 14px 18px;
+  }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="top">
+    <header class="bar panel">
+      <div class="onair"><span class="dot"></span><span>On air</span></div>
+      <div class="brand">
+        <div class="name" id="name"></div>
+        <div class="tag" id="tag"></div>
+      </div>
+      <div class="logo" id="monogram"></div>
+    </header>
+
+    <section class="clocks" id="clocks"></section>
+
+    <section class="ticker panel" id="ticker">
+      <div class="ticker-label">Join in</div>
+      <div class="ticker-track"><div class="ticker-move" id="tickerMove"></div></div>
+    </section>
+  </div>
+</div>
+
+<script>
+(function () {
+  // ===== SETTINGS: change the text between the quotes =====
+  var SETTINGS = {
+    station: "Your station",
+    tagline: "Live radio from around the world",
+    accent: "#ff4d3d",
+    clocks: [
+      ["Brisbane", "Australia/Brisbane"],
+      ["London", "Europe/London"],
+      ["New York", "America/New_York"],
+      ["Tokyo", "Asia/Tokyo"]
+    ],
+    messages: [
+      "Comment where you are listening from",
+      "Request a song in the comments",
+      "Follow so you catch the next show",
+      "Music from around the world, live from Australia"
+    ]
+  };
+  // ===== END OF SETTINGS =====
+
+  function $(id) { return document.getElementById(id); }
+
+  // Still image version: one message, no clocks, nothing moves.
+  var isImage = new URLSearchParams(location.search).get("image") === "1";
+  if (isImage) {
+    document.body.classList.add("image");
+    SETTINGS.clocks = [];
+    SETTINGS.messages = SETTINGS.messages.slice(0, 1);
+  }
+
+  // Scale the 1080 x 1920 design to whatever size the source is.
+  var stage = $("stage");
+  function fit() {
+    var s = Math.min(window.innerWidth / 1080, window.innerHeight / 1920);
+    stage.style.transform = "scale(" + s + ")";
+    stage.style.left = ((window.innerWidth - 1080 * s) / 2) + "px";
+  }
+  window.addEventListener("resize", fit);
+  fit();
+
+  document.documentElement.style.setProperty("--accent", SETTINGS.accent);
+
+  // Station bar
+  $("name").textContent = SETTINGS.station;
+  $("tag").textContent = SETTINGS.tagline;
+  $("tag").hidden = !SETTINGS.tagline;
+  $("monogram").textContent = (SETTINGS.station.trim()[0] || "").toUpperCase();
+
+  // World clocks
+  var clocksEl = $("clocks");
+  var clocks = [];
+  SETTINGS.clocks.slice(0, 4).forEach(function (pair) {
+    var fmt;
+    try {
+      fmt = new Intl.DateTimeFormat("en-AU", { hour: "numeric", minute: "2-digit", hour12: true, timeZone: pair[1] });
+    } catch (e) {
+      return;
+    }
+    var el = document.createElement("div");
+    el.className = "clock panel";
+    var city = document.createElement("span");
+    city.className = "city";
+    city.textContent = pair[0];
+    var time = document.createElement("span");
+    time.className = "time";
+    el.appendChild(city);
+    el.appendChild(time);
+    clocksEl.appendChild(el);
+    clocks.push({ el: time, fmt: fmt });
+  });
+  clocksEl.hidden = clocks.length === 0;
+
+  function tick() {
+    var now = new Date();
+    clocks.forEach(function (c) { c.el.textContent = c.fmt.format(now); });
+  }
+  if (clocks.length) {
+    tick();
+    setTimeout(function () { tick(); setInterval(tick, 1000); }, 1000 - (Date.now() % 1000));
+  }
+
+  // Ticker
+  var messages = SETTINGS.messages.filter(Boolean);
+  if (messages.length === 0) {
+    $("ticker").hidden = true;
+  } else {
+    var move = $("tickerMove");
+    for (var copy = 0; copy < (isImage ? 1 : 2); copy++) {
+      var run = document.createElement("div");
+      run.className = "run";
+      messages.forEach(function (m) {
+        var span = document.createElement("span");
+        span.className = "msg";
+        span.textContent = m;
+        run.appendChild(span);
+      });
+      move.appendChild(run);
+    }
+    var setSpeed = function () {
+      move.style.animationDuration = Math.max(12, move.firstChild.offsetWidth / 110) + "s";
+    };
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(setSpeed);
+    } else {
+      setSpeed();
+    }
+  }
+
+  // Layout check only
+  if (new URLSearchParams(location.search).get("preview") === "1") {
+    document.body.classList.add("preview");
+    [
+      { top: 24, left: 24, width: 1032, height: 180, text: "TikTok profile and viewer count (approx.)" },
+      { top: 1180, left: 24, width: 700, height: 560, text: "TikTok comments (approx.)" },
+      { top: 1770, left: 24, width: 1032, height: 126, text: "TikTok buttons (approx.)" }
+    ].forEach(function (g) {
+      var el = document.createElement("div");
+      el.className = "guide";
+      el.style.top = g.top + "px";
+      el.style.left = g.left + "px";
+      el.style.width = g.width + "px";
+      el.style.height = g.height + "px";
+      el.textContent = g.text;
+      stage.appendChild(el);
+    });
+  }
+})();
+</script>
+</body>
+</html>
